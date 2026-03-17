@@ -1,0 +1,209 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// User profiles - can be author, reviewer, or both
+model Profile {
+  id                    String     @id @default(cuid())
+  email                 String     @unique
+  name                  String?
+  image                 String?
+  userType              UserType   @default(REVIEWER)
+  bio                   String?
+  
+  // Reviewer-specific fields
+  amazonProfileUrl      String?
+  goodreadsProfileUrl   String?
+  preferredGenres       String?    // JSON array of genres
+  reviewerRating        Float      @default(0)
+  totalReviewsGiven     Int        @default(0)
+  
+  // Author-specific fields
+  authorBio             String?
+  website               String?
+  
+  // Timestamps
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+  
+  // Relations
+  booksAsAuthor         Book[]
+  campaigns             Campaign[]
+  claims                Claim[]
+  account               Account[]
+  session               Session[]
+}
+
+enum UserType {
+  AUTHOR
+  REVIEWER
+  BOTH
+}
+
+// Books - can be pre-launch or published
+model Book {
+  id                    String        @id @default(cuid())
+  title                 String
+  author                String
+  authorId              String
+  blurb                 String?
+  coverImage            String?
+  genre                 String?
+  isbn                  String?
+  
+  // Pre-launch specific
+  manuscriptFile        String?       // Path to secure manuscript file
+  manuscriptType        String?       // EPUB, PDF, etc.
+  releaseDate           DateTime?
+  
+  // Published specific
+  amazonUrl             String?
+  appleBooksUrl         String?
+  kindleUnlimited       Boolean       @default(false)
+  
+  // Status
+  status                BookStatus    @default(DRAFT)
+  
+  // Timestamps
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  
+  // Relations
+  authorProfile         Profile       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  campaigns             Campaign[]
+}
+
+enum BookStatus {
+  DRAFT
+  PRE_LAUNCH
+  PUBLISHED
+  ARCHIVED
+}
+
+// Campaigns - author creates these to get reviews
+model Campaign {
+  id                    String          @id @default(cuid())
+  bookId                String
+  authorId              String
+  
+  // Campaign details
+  name                  String?
+  description           String?
+  targetReviewCount     Int             @default(50)
+  
+  // Pricing
+  campaignType          CampaignType
+  pricePerReview        Float           @default(0.98)
+  totalAmount           Float
+  paypalOrderId         String?
+  paypalCaptureId       String?
+  
+  // Status tracking
+  status                CampaignStatus  @default(DRAFT)
+  
+  // Deadline
+  deadline              DateTime?
+  
+  // Timestamps
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  
+  // Relations
+  book                  Book            @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  author                Profile         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  claims                Claim[]
+}
+
+enum CampaignType {
+  PRE_LAUNCH    // ARC - Advance Review Copies
+  POST_LAUNCH   // Review boosting for published books
+}
+
+enum CampaignStatus {
+  DRAFT
+  PENDING_PAYMENT
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+// Claims - when a reviewer claims a book to review
+model Claim {
+  id                    String        @id @default(cuid())
+  campaignId            String
+  reviewerId            String
+  
+  // Status tracking
+  status                ClaimStatus   @default(CLAIMED)
+  
+  // Review tracking
+  reviewUrl             String?       // Link to the posted review
+  reviewPostedAt        DateTime?
+  
+  // Reminders sent
+  remindersSent         Int           @default(0)
+  lastReminderAt        DateTime?
+  
+  // Timestamps
+  claimedAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  
+  // Relations
+  campaign              Campaign      @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  reviewer              Profile       @relation(fields: [reviewerId], references: [id], onDelete: Cascade)
+  
+  @@unique([campaignId, reviewerId])
+}
+
+enum ClaimStatus {
+  CLAIMED       // Reviewer claimed the book
+  DOWNLOADED    // Downloaded the manuscript (pre-launch)
+  READING       // Marked as currently reading
+  REVIEWED      // Posted review
+  GHOSTED       // Missed deadline
+}
+
+// NextAuth models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         Profile  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
