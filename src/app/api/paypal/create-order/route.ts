@@ -7,28 +7,32 @@ import { authOptions } from "@/lib/auth"
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
+    
     const body = await request.json()
     const { campaignId, description } = body
 
     if (!campaignId) {
-      return NextResponse.json(
-        { error: "Campaign ID is required" },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: "Campaign ID is required" }, { status: 400 })
     }
 
-    // Verify campaign exists and is pending payment
+    // Verify campaign exists
     const campaign = await db.campaign.findUnique({
       where: { id: campaignId },
-      include: { book: true },
+      include: { book: true, author: true },
     })
 
-    if (campaign.authorId !== session.user.id) {
+    if (!campaign) {
+      return NextResponse.json({ error: "Campaign not found" }, { status: 404 })
+    }
+
+    // If logged in, verify ownership
+    if (session?.user?.id && campaign.authorId !== session.user.id) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
+
+    // If NOT logged in, ensure this is a new campaign pending payment
+    if (!session?.user?.id && campaign.status !== "PENDING_PAYMENT") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     if (campaign.status !== "PENDING_PAYMENT") {

@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useAppStore } from "@/stores/app-store"
+import { useState, useEffect, Suspense } from "react"
+import { useSearchParams } from "next/navigation"
+import { useAppStore, ViewMode } from "@/stores/app-store"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import { LandingPage } from "@/components/auth/LandingPage"
@@ -35,8 +36,9 @@ interface User {
   preferredGenres?: string | null
 }
 
-export default function Home() {
-  const { currentView, selectedCampaignId, setCurrentView } = useAppStore()
+function HomeContent() {
+  const { currentView, selectedCampaignId, setCurrentView, setGuestEmail } = useAppStore()
+  const searchParams = useSearchParams()
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -48,7 +50,10 @@ export default function Home() {
           const data = await response.json()
           if (data.user) {
             setUser(data.user)
-            setCurrentView("dashboard")
+            // Only redirect to dashboard if we're currently on landing or auth pages
+            if (["landing", "auth", "signin", "signup"].includes(currentView)) {
+              setCurrentView("dashboard")
+            }
           }
         }
       } catch {
@@ -59,6 +64,17 @@ export default function Home() {
     }
     checkAuth()
   }, [setCurrentView])
+
+  useEffect(() => {
+    const view = searchParams.get("view")
+    const email = searchParams.get("email")
+    if (view && ["landing", "auth", "signin", "signup", "campaign-new"].includes(view)) {
+      setCurrentView(view as any)
+    }
+    if (email) {
+      setGuestEmail(email)
+    }
+  }, [searchParams, setCurrentView, setGuestEmail])
 
   const handleAuthSuccess = (newUser: User) => {
     setUser(newUser)
@@ -108,7 +124,7 @@ export default function Home() {
           <ReviewerDashboard user={user} />
         )
       case "campaign-new":
-        if (!user) return <SignInPage onAuthSuccess={handleAuthSuccess} />
+        // Allow guests to start a campaign
         return <CampaignWizard user={user} onComplete={handleCampaignComplete} />
       case "discover":
         if (!user) return <SignInPage onAuthSuccess={handleAuthSuccess} />
@@ -147,5 +163,19 @@ export default function Home() {
       </main>
       {showFooter && <Footer />}
     </div>
+  )
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex flex-col bg-black">
+        <main className="flex-1 flex items-center justify-center">
+          <div className="h-16 w-16 rounded-full border-2 border-violet-500 border-t-transparent animate-spin" />
+        </main>
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
   )
 }

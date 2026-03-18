@@ -15,11 +15,33 @@ export async function POST(request: NextRequest) {
       amazonUrl,
       appleBooksUrl,
       kindleUnlimited,
-      authorId,
+      authorId: providedAuthorId,
+      email,
     } = body
 
-    if (!title || !author) {
-      return NextResponse.json({ error: "Title and author are required" }, { status: 400 })
+    let authorId = providedAuthorId
+
+    // If no authorId is provided but email is, find or create a profile
+    // This is for guest authors launching campaigns
+    if (!authorId && email) {
+      let profile = await db.profile.findUnique({
+        where: { email },
+      })
+
+      if (!profile) {
+        profile = await db.profile.create({
+          data: {
+            email,
+            name: author || email.split("@")[0],
+            userType: "AUTHOR",
+          },
+        })
+      }
+      authorId = profile.id
+    }
+
+    if (!title || !author || !authorId) {
+      return NextResponse.json({ error: "Title, author, and author ID (or email) are required" }, { status: 400 })
     }
 
     const book = await db.book.create({
@@ -34,7 +56,7 @@ export async function POST(request: NextRequest) {
         amazonUrl: amazonUrl || null,
         appleBooksUrl: appleBooksUrl || null,
         kindleUnlimited: kindleUnlimited || false,
-        authorId: authorId || "default-author",
+        authorId,
       },
     })
 

@@ -16,6 +16,7 @@ import {
   Upload, 
   FileText, 
   Link, 
+  Mail,
   CheckCircle,
   Users,
   Shield,
@@ -26,12 +27,12 @@ import {
 } from "lucide-react"
 
 interface CampaignWizardProps {
-  user: {
+  user?: {
     id: string
     name: string | null
     email: string
     userType: string
-  }
+  } | null
   onComplete: () => void
 }
 
@@ -115,7 +116,7 @@ const TIERS = [
 ]
 
 export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
-  const { setCurrentView } = useAppStore()
+  const { setCurrentView, setGuestEmail } = useAppStore()
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [campaignCreated, setCampaignCreated] = useState(false)
@@ -124,7 +125,7 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
   
   const [formData, setFormData] = useState({
     title: "",
-    author: user.name || "",
+    author: user?.name || "",
     genre: "",
     blurb: "",
     isbn: "",
@@ -139,6 +140,7 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
     tier: "author",
     campaignName: "",
     description: "",
+    guestEmail: "",
   })
 
   const totalSteps = 4
@@ -182,10 +184,15 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
           amazonUrl: formData.amazonUrl,
           appleBooksUrl: formData.appleBooksUrl,
           kindleUnlimited: formData.kindleUnlimited,
+          authorId: user?.id,
+          email: !user ? formData.guestEmail : undefined,
         }),
       })
 
-      if (!bookResponse.ok) throw new Error("Failed to create book")
+      if (!bookResponse.ok) {
+        const errorData = await bookResponse.json().catch(() => ({ error: "Unknown error" }))
+        throw new Error(errorData.error || "Failed to create book")
+      }
       const book = await bookResponse.json()
 
       // Upload manuscript if pre-launch
@@ -194,10 +201,11 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
         uploadFormData.append("file", formData.manuscriptFile)
         uploadFormData.append("bookId", book.id)
 
-        await fetch("/api/upload", {
+        const uploadRes = await fetch("/api/upload", {
           method: "POST",
           body: uploadFormData,
         })
+        if (!uploadRes.ok) console.error("Manuscript upload failed")
       }
 
       // Create campaign (PENDING_PAYMENT)
@@ -207,7 +215,8 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           bookId: book.id,
-          authorId: user.id,
+          authorId: user?.id,
+          email: !user ? formData.guestEmail : undefined,
           campaignType: formData.isPublished ? "POST_LAUNCH" : "PRE_LAUNCH",
           targetReviewCount: tier.readers,
           name: formData.campaignName || `${formData.title} Campaign`,
@@ -217,14 +226,17 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
         }),
       })
 
-      if (!campaignResponse.ok) throw new Error("Failed to create campaign")
+      if (!campaignResponse.ok) {
+        const errorData = await campaignResponse.json().catch(() => ({ error: "Unknown error" }))
+        throw new Error(errorData.error || "Failed to create campaign")
+      }
+      
       const campaign = await campaignResponse.json()
       
       setCampaignId(campaign.id)
       return campaign.id
-    } catch (error) {
-      console.error("Error creating campaign:", error)
-      setPaymentError("Failed to create campaign. Please try again.")
+    } catch (error: any) {
+      setPaymentError(error.message || "Failed to initiate campaign. Please try again.")
       return null
     } finally {
       setLoading(false)
@@ -261,12 +273,27 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
             Remember: We guarantee reach, not reviews. Your book&apos;s quality determines engagement.
           </p>
           
-          <Button 
-            className="w-full bg-white text-black font-medium hover:bg-white/90 h-12 rounded-xl"
-            onClick={onComplete}
-          >
-            Go to Dashboard
-          </Button>
+          {user ? (
+            <Button 
+              className="w-full bg-white text-black font-medium hover:bg-white/90 h-12 rounded-xl"
+              onClick={onComplete}
+            >
+              Go to Dashboard
+            </Button>
+          ) : (
+            <div className="space-y-3">
+              <Button 
+                className="w-full bg-white text-black font-medium hover:bg-white/90 h-10 rounded-xl"
+                onClick={() => setCurrentView("signup")}
+              >
+                Create Account to Manage Campaign
+              </Button>
+              <p className="text-xs text-white/30">
+                We&apos;ve sent a confirmation email to <span className="text-violet-400">{formData.guestEmail}</span>.
+                Please check your inbox.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     )
@@ -307,6 +334,28 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
               <h2 className="text-2xl font-semibold text-white mb-2">Is your book published?</h2>
               <p className="text-white/50">This determines how readers access your book.</p>
             </div>
+
+            {!user && (
+              <div className="space-y-2 mb-8">
+                <Label htmlFor="guestEmail" className="text-white/70">Your Email Address *</Label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
+                  <Input
+                    id="guestEmail"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={formData.guestEmail}
+                    onChange={(e) => {
+                      updateFormData({ guestEmail: e.target.value })
+                      setGuestEmail(e.target.value)
+                    }}
+                    className="pl-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-violet-500 focus:ring-violet-500 h-12 rounded-xl"
+                    required
+                  />
+                </div>
+                <p className="text-xs text-white/30">We&apos;ll use this to link your campaign to your account later.</p>
+              </div>
+            )}
 
             <div className="space-y-4">
               <button

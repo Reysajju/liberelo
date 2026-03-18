@@ -12,6 +12,7 @@ import {
 import { Sparkles, LayoutDashboard, PlusCircle, Compass, Library, LogOut, Menu, X } from "lucide-react"
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter, usePathname } from "next/navigation"
 
 interface HeaderProps {
   user: {
@@ -26,6 +27,8 @@ interface HeaderProps {
 export function Header({ user }: HeaderProps) {
   const { currentView, setCurrentView } = useAppStore()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const router = useRouter()
+  const pathname = usePathname()
 
   const isAuthor = user?.userType === "AUTHOR" || user?.userType === "BOTH"
   const isReviewer = user?.userType === "REVIEWER" || user?.userType === "BOTH"
@@ -183,13 +186,19 @@ export function Header({ user }: HeaderProps) {
             <div className="flex items-center gap-3">
               <Button 
                 variant="ghost"
-                onClick={() => setCurrentView("signin")}
+                onClick={() => {
+                  if (pathname === "/") setCurrentView("signin")
+                  else router.push("/?view=signin")
+                }}
                 className="hidden sm:inline-flex text-foreground/80 hover:text-primary font-medium font-sans"
               >
                 Sign In
               </Button>
               <Button 
-                onClick={() => setCurrentView("signup")}
+                onClick={() => {
+                  if (pathname === "/") setCurrentView("signup")
+                  else router.push("/?view=signup")
+                }}
                 className="bg-primary text-primary-foreground font-medium hover:bg-primary/90 rounded-xl px-6 font-sans shadow-sm"
               >
                 Join Now
@@ -220,8 +229,16 @@ export function Header({ user }: HeaderProps) {
                 <Link href="/faq" className="flex items-center h-10 px-4 text-sm font-medium rounded-xl hover:bg-secondary/5" onClick={() => setMobileMenuOpen(false)}>FAQ</Link>
                 <Link href="/contact" className="flex items-center h-10 px-4 text-sm font-medium rounded-xl hover:bg-secondary/5" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
                 <div className="h-px bg-border my-2" />
-                <Button variant="ghost" className="justify-start text-sm font-medium rounded-xl" onClick={() => { setCurrentView("signin"); setMobileMenuOpen(false) }}>Sign In</Button>
-                <Button className="justify-start text-sm font-medium rounded-xl bg-primary text-primary-foreground" onClick={() => { setCurrentView("signup"); setMobileMenuOpen(false) }}>Join Now</Button>
+                <Button variant="ghost" className="justify-start text-sm font-medium rounded-xl" onClick={() => { 
+                  if (pathname === "/") setCurrentView("signin")
+                  else router.push("/?view=signin")
+                  setMobileMenuOpen(false) 
+                }}>Sign In</Button>
+                <Button className="justify-start text-sm font-medium rounded-xl bg-primary text-primary-foreground" onClick={() => { 
+                  if (pathname === "/") setCurrentView("signup")
+                  else router.push("/?view=signup")
+                  setMobileMenuOpen(false) 
+                }}>Join Now</Button>
               </>
             )}
 

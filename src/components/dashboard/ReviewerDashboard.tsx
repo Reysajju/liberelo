@@ -174,18 +174,35 @@ export function ReviewerDashboard({ user }: ReviewerDashboardProps) {
           {loading ? (
             <div className="text-center py-12 text-white/40">Loading...</div>
           ) : pendingClaims.length === 0 ? (
-            <div className="text-center py-12 rounded-2xl border border-dashed border-white/10">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/5 mb-4">
-                <BookOpen className="h-8 w-8 text-white/20" />
+            <div className="space-y-8">
+              <div className="text-center py-12 rounded-2xl border border-dashed border-white/10 bg-white/5">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-violet-500/10 mb-4">
+                  <Star className="h-8 w-8 text-violet-400" />
+                </div>
+                <h3 className="font-medium text-white mb-2">Your library is empty</h3>
+                <p className="text-sm text-white/40 mb-6 max-w-sm mx-auto">
+                  Start your reading journey by discovering new books from independent authors.
+                </p>
+                <Button 
+                  onClick={() => setCurrentView("discover")}
+                  className="bg-white text-black font-medium hover:bg-white/90 rounded-xl px-8"
+                >
+                  Discover Books
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
               </div>
-              <h3 className="font-medium text-white mb-2">No Pending Reviews</h3>
-              <p className="text-sm text-white/40 mb-6">Discover new books to read and review</p>
-              <Button 
-                onClick={() => setCurrentView("discover")}
-                className="bg-white text-black font-medium hover:bg-white/90 rounded-xl"
-              >
-                Browse Books
-              </Button>
+
+              {/* Simple Recommendation Placeholder */}
+              <div>
+                <h3 className="text-lg font-medium text-white mb-4">Recommended for You</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="aspect-[2/3] rounded-xl bg-white/5 border border-white/10 animate-pulse flex items-center justify-center">
+                      <BookOpen className="h-8 w-8 text-white/10" />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 gap-4">

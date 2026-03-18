@@ -3,9 +3,11 @@
 import { useAppStore } from "@/stores/app-store"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, CheckCircle2 } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export function PricingPage() {
   const { setCurrentView } = useAppStore()
+  const router = useRouter()
 
   const tiers = [
     {
@@ -143,7 +145,7 @@ export function PricingPage() {
                 className={`w-full h-12 rounded-xl font-medium tracking-wide ${
                   tier.highlight ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'bg-secondary/10 text-foreground hover:bg-secondary/20'
                 }`}
-                onClick={() => setCurrentView("signup")}
+                onClick={() => router.push("/?view=campaign-new")}
               >
                 Launch Campaign
               </Button>

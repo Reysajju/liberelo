@@ -7,10 +7,7 @@ import { authOptions } from "@/lib/auth"
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
+    
     const body = await request.json()
     const { orderID, campaignId } = body
 
@@ -21,7 +18,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Verify the campaign exists and is pending
+    // Verify the campaign exists
     const campaign = await db.campaign.findUnique({
       where: { id: campaignId },
     })
@@ -30,8 +27,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Campaign not found" }, { status: 404 })
     }
 
-    if (campaign.authorId !== session.user.id) {
+    // If logged in, verify ownership
+    if (session?.user?.id && campaign.authorId !== session.user.id) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
+
+    // If NOT logged in, ensure this is a new campaign pending payment
+    if (!session?.user?.id && campaign.status !== "PENDING_PAYMENT") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     if (campaign.status !== "PENDING_PAYMENT") {

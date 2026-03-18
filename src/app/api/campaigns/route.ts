@@ -6,7 +6,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const {
       bookId,
-      authorId,
+      authorId: providedAuthorId,
+      email,
       campaignType,
       targetReviewCount,
       name,
@@ -14,8 +15,28 @@ export async function POST(request: NextRequest) {
       totalAmount,
     } = body
 
+    let authorId = providedAuthorId
+
+    // If no authorId is provided, we use the email to find or create a placeholder profile
+    if (!authorId && email) {
+      let profile = await db.profile.findUnique({
+        where: { email },
+      })
+
+      if (!profile) {
+        profile = await db.profile.create({
+          data: {
+            email,
+            name: email.split("@")[0],
+            userType: "AUTHOR",
+          },
+        })
+      }
+      authorId = profile.id
+    }
+
     if (!bookId || !authorId) {
-      return NextResponse.json({ error: "Book ID and Author ID are required" }, { status: 400 })
+      return NextResponse.json({ error: "Book ID and Author ID (or email) are required" }, { status: 400 })
     }
 
     const campaign = await db.campaign.create({

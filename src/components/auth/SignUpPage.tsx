@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAppStore } from "@/stores/app-store"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,7 +14,7 @@ interface SignUpPageProps {
 }
 
 export function SignUpPage({ onAuthSuccess }: SignUpPageProps) {
-  const { setCurrentView } = useAppStore()
+  const { setCurrentView, guestEmail } = useAppStore()
   const { toast } = useToast()
   const [step, setStep] = useState<"role" | "details">("role")
   const [selectedType, setSelectedType] = useState<"NEW_AUTHOR" | "PUBLISHED_AUTHOR" | "REVIEWER">("NEW_AUTHOR")
@@ -24,6 +24,19 @@ export function SignUpPage({ onAuthSuccess }: SignUpPageProps) {
     email: "",
     password: "",
   })
+
+  useEffect(() => {
+    if (guestEmail) {
+      setFormData(prev => ({ 
+        ...prev, 
+        email: guestEmail,
+        name: guestEmail.split("@")[0]
+      }))
+      // If we have a guest email, they are likely an author
+      setSelectedType("NEW_AUTHOR")
+      setStep("details")
+    }
+  }, [guestEmail])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

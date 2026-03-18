@@ -307,18 +307,47 @@ export function AuthorDashboard({ user }: AuthorDashboardProps) {
             {loading ? (
               <div className="text-center py-12 text-white/40">Loading campaigns...</div>
             ) : campaigns.filter(c => c.status === "ACTIVE" || c.status === "PENDING_PAYMENT").length === 0 ? (
-              <div className="text-center py-16">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/5 mb-4">
-                  <BookOpen className="h-8 w-8 text-white/20" />
+              <div className="space-y-6">
+                <div className="text-center py-16 bg-white/5 rounded-2xl border border-dashed border-white/10">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-violet-500/10 mb-4">
+                    <BookOpen className="h-8 w-8 text-violet-400" />
+                  </div>
+                  <h3 className="font-medium text-white mb-2">Ready to reach your first 500 readers?</h3>
+                  <p className="text-sm text-white/40 mb-6 max-w-sm mx-auto">
+                    You haven&apos;t launched any campaigns yet. Start by sharing your book with our community.
+                  </p>
+                  <Button 
+                    onClick={() => setCurrentView("campaign-new")}
+                    className="bg-white text-black font-medium hover:bg-white/90 rounded-xl px-8"
+                  >
+                    Launch Your First Campaign
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </div>
-                <h3 className="font-medium text-white mb-2">No Active Campaigns</h3>
-                <p className="text-sm text-white/40 mb-6">Share your book with our community to get started</p>
-                <Button 
-                  onClick={() => setCurrentView("campaign-new")}
-                  className="bg-white text-black font-medium hover:bg-white/90 rounded-xl"
-                >
-                  Start Your First Campaign
-                </Button>
+
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="p-5 rounded-xl border border-white/5 bg-white/5">
+                    <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-4">
+                      <Star className="h-4 w-4 text-emerald-400" />
+                    </div>
+                    <h4 className="text-white font-medium mb-2 text-sm">1. Submit Book</h4>
+                    <p className="text-xs text-white/40">Upload your manuscript or share your Amazon link.</p>
+                  </div>
+                  <div className="p-5 rounded-xl border border-white/5 bg-white/5">
+                    <div className="h-8 w-8 rounded-lg bg-violet-500/10 flex items-center justify-center mb-4">
+                      <Users className="h-4 w-4 text-violet-400" />
+                    </div>
+                    <h4 className="text-white font-medium mb-2 text-sm">2. Choose Reach</h4>
+                    <p className="text-xs text-white/40">Select how many guaranteed readers you want to reach.</p>
+                  </div>
+                  <div className="p-5 rounded-xl border border-white/5 bg-white/5">
+                    <div className="h-8 w-8 rounded-lg bg-fuchsia-500/10 flex items-center justify-center mb-4">
+                      <TrendingUp className="h-4 w-4 text-fuchsia-400" />
+                    </div>
+                    <h4 className="text-white font-medium mb-2 text-sm">3. Get Feedback</h4>
+                    <p className="text-xs text-white/40">Watch as readers claim and review your work.</p>
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="grid gap-4">

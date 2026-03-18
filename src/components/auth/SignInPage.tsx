@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAppStore } from "@/stores/app-store"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,13 +14,19 @@ interface SignInPageProps {
 }
 
 export function SignInPage({ onAuthSuccess }: SignInPageProps) {
-  const { setCurrentView } = useAppStore()
+  const { setCurrentView, guestEmail } = useAppStore()
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   })
+
+  useEffect(() => {
+    if (guestEmail) {
+      setFormData(prev => ({ ...prev, email: guestEmail }))
+    }
+  }, [guestEmail])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
