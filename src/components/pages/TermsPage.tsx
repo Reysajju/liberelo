@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useAppStore } from "@/stores/app-store"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, FileText } from "lucide-react"
@@ -13,10 +14,12 @@ export function TermsPage() {
         <Button
           variant="ghost"
           className="self-start -ml-4 mb-12 text-foreground/60 hover:text-foreground hover:bg-transparent tracking-wide"
-          onClick={() => setCurrentView("landing")}
+          asChild
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Home
+          <Link href="/">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Home
+          </Link>
         </Button>
 
         <header className="mb-20 text-center">
@@ -43,24 +46,24 @@ export function TermsPage() {
           <section>
             <h2 className="font-serif text-3xl font-medium text-foreground mb-4">2. Description of Service</h2>
             <p>
-              Liberelo operates as a literary discovery facilitation service. We provide a platform that connects authors (both published and pre-publication) with readers who have expressed interest in reviewing books within specific genres.
+              Liberelo operates as a hybrid commission-based publishing and marketing service. We evaluate submitted manuscripts and offer partnership packages to distribute, market, and sell selected titles across wide and exclusive distribution channels.
             </p>
           </section>
 
           <section>
-            <h2 className="font-serif text-3xl font-medium text-foreground mb-4">3. Prohibition of Compensated Reviews</h2>
+            <h2 className="font-serif text-3xl font-medium text-foreground mb-4">3. Partnership and Fees</h2>
             <p>
-              <strong>Liberelo explicitly prohibits the purchasing of reviews.</strong> Authors pay for <em>guaranteed reader reach</em> and distribution software, not for favorable feedback. Reviewers are never compensated financially for their opinions. This policy is strictly enforced to maintain compliance with Amazon's Terms of Service and FTC guidelines.
+              <strong>Commission Model:</strong> Liberelo provides publishing, marketing, and distribution services on a commission-based partnership model. We do not charge upfront publishing or marketing fees. Royalties are split according to the author's selected partnership package based on net revenue received.
+            </p>
+            <p className="mt-4">
+              <strong>Annual Contract Fee:</strong> Authors accepted into the Liberelo partnership program agree to a $99 annual contract maintenance fee. This is not an upfront publishing fee, but a recurring administrative retainer to maintain the author's portfolio and active distribution status across our network.
             </p>
           </section>
 
           <section>
             <h2 className="font-serif text-3xl font-medium text-foreground mb-4">4. User Responsibilities</h2>
             <p>
-              <strong>Authors:</strong> Must possess the legal right to distribute the manuscripts they upload. Authors must not contact reviewers directly outside the platform or attempt to influence their honest opinions.
-            </p>
-            <p>
-              <strong>Reviewers:</strong> Must claim only books they reasonably intend to read. Reviews must be honest, original, and cross-posted to the agreed-upon retail platforms. Repeated failure to read claimed books will result in account suspension.
+              <strong>Authors:</strong> Must possess the legal right to distribute the manuscripts they upload. Authors agree to the terms of their selected distribution exclusivity and commission structure.
             </p>
           </section>
 
@@ -69,9 +72,9 @@ export function TermsPage() {
             <p className="mb-6">For formal legal correspondence regarding these terms, please contact our counsel.</p>
             <Button 
               variant="outline"
-              onClick={() => setCurrentView("contact")}
+              asChild
             >
-              Contact Legal
+              <Link href="/contact">Contact Legal</Link>
             </Button>
           </section>
         </div>

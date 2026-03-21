@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { useAppStore } from "@/stores/app-store"
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -43,73 +42,69 @@ const GENRES = [
   "Contemporary", "Dystopian", "Adventure", "Paranormal", "Other"
 ]
 
-// Unified tiers — single source of truth matching PricingPage
+// Unified tiers — single source of truth matching PricingPage (Royalty Packages)
 const TIERS = [
   { 
-    id: "debut", 
-    name: "Debut", 
-    category: "ARC / Pre-Launch",
-    price: 29, 
-    reach: "500",
-    readers: 500,
-    description: "For new authors seeking their first wave of genuine reader feedback.",
+    id: "standard", 
+    name: "Standard", 
+    category: "Wide Distribution",
+    price: "50%", 
+    reach: "Wide",
+    readers: 500, // internal proxy value
+    description: "Our entry-level partnership covering standard publication and minimal marketing.",
     icon: Zap,
     features: [
-      "Reach exactly 500 genre-matched readers",
-      "Secure ARC distribution",
-      "Amazon retail linking",
-      "Basic engagement analytics",
+      "Professional formatting & cover review",
+      "Wide distribution across all retailers",
+      "Basic launch marketing campaign",
     ],
     popular: false
   },
   { 
-    id: "author", 
-    name: "Author",
-    category: "Published Authors",
-    price: 79, 
-    reach: "2,500",
+    id: "plus", 
+    name: "Plus",
+    category: "Wide & Exclusive",
+    price: "60%", 
+    reach: "Wide + Liberelo",
     readers: 2500,
-    description: "For established authors looking to reliably scale their launch.",
+    description: "Enhanced marketing spend for authors with a proven audience.",
     icon: Sparkles,
     features: [
-      "Reach exactly 2,500 genre-matched readers",
-      "Priority feed placement",
-      "Advanced sub-genre/trope targeting",
-      "Real-time analytics dashboard",
+      "Advanced ad-campaign management",
+      "Priority placement on Liberelo platform",
+      "Genre-matched email blasts",
     ],
     popular: true
   },
   { 
-    id: "publisher", 
-    name: "Publisher",
-    category: "Published Authors",
-    price: 199, 
-    reach: "10,000",
+    id: "professional", 
+    name: "Professional",
+    category: "Exclusive Distribution",
+    price: "75%", 
+    reach: "Liberelo Exclusive",
     readers: 10000,
-    description: "For high-volume imprints demanding maximum market penetration.",
+    description: "For serious authors utilizing our proprietary selling machine exclusively.",
     icon: Crown,
     features: [
-      "Reach exactly 10,000 genre-matched readers",
-      "Dedicated campaign manager",
-      "Custom email blast to reader network",
-      "White-glove listing setup",
+      "Exclusive Liberelo platform sales",
+      "Dedicated marketing manager",
+      "Custom promotional graphics",
     ],
     popular: false
   },
   { 
     id: "elite", 
     name: "Elite",
-    category: "Published Authors",
-    price: 349, 
-    reach: "20,000",
-    readers: 20000,
-    description: "The ultimate reach package for guaranteed placement on bestseller radars.",
+    category: "Bestseller Priority",
+    price: "90%", 
+    reach: "Exclusive VIP",
+    readers: 25000,
+    description: "Maximum author royalties for established bestsellers moving massive volume.",
     icon: Star,
     features: [
-      "Reach exactly 20,000 genre-matched readers",
+      "Whitelabel publishing imprint options",
       "Top-level site wide promotion",
-      "Guaranteed cross-platform syndication pushing",
-      "1-on-1 strategy call with team",
+      "1-on-1 strategy calls with our team",
     ],
     popular: false
   },
@@ -141,6 +136,7 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
     campaignName: "",
     description: "",
     guestEmail: "",
+    phone: "",
   })
 
   const totalSteps = 4
@@ -186,6 +182,7 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
           kindleUnlimited: formData.kindleUnlimited,
           authorId: user?.id,
           email: !user ? formData.guestEmail : undefined,
+          phone: !user ? formData.phone : undefined,
         }),
       })
 
@@ -208,7 +205,7 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
         if (!uploadRes.ok) console.error("Manuscript upload failed")
       }
 
-      // Create campaign (PENDING_PAYMENT)
+      // Create submission as a campaign (PENDING_REVIEW conceptually)
       const tier = getTier()
       const campaignResponse = await fetch("/api/campaigns", {
         method: "POST",
@@ -219,24 +216,25 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
           email: !user ? formData.guestEmail : undefined,
           campaignType: formData.isPublished ? "POST_LAUNCH" : "PRE_LAUNCH",
           targetReviewCount: tier.readers,
-          name: formData.campaignName || `${formData.title} Campaign`,
-          description: formData.description,
-          totalAmount: tier.price,
+          name: formData.title,
+          description: formData.blurb,
+          totalAmount: 0, // no upfront payment
           tier: formData.tier,
         }),
       })
 
       if (!campaignResponse.ok) {
         const errorData = await campaignResponse.json().catch(() => ({ error: "Unknown error" }))
-        throw new Error(errorData.error || "Failed to create campaign")
+        throw new Error(errorData.error || "Failed to submit application")
       }
       
       const campaign = await campaignResponse.json()
       
       setCampaignId(campaign.id)
+      setCampaignCreated(true)
       return campaign.id
     } catch (error: any) {
-      setPaymentError(error.message || "Failed to initiate campaign. Please try again.")
+      setPaymentError(error.message || "Failed to submit application. Please try again.")
       return null
     } finally {
       setLoading(false)
@@ -246,7 +244,7 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
   if (campaignCreated) {
     const tier = getTier()
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center px-4">
+      <div className="min-h-screen bg-background flex items-center justify-center px-4">
         <div className="absolute inset-0 bg-gradient-to-br from-violet-950/30 via-black to-fuchsia-950/20 pointer-events-none" />
         
         <div className="relative w-full max-w-md text-center">
@@ -257,20 +255,20 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
             </div>
           </div>
           
-          <h2 className="text-2xl font-semibold text-white mb-3">Campaign Launched!</h2>
+          <h2 className="text-2xl font-semibold text-white mb-3">Application Submitted!</h2>
           <p className="text-white/50 mb-4">
-            Payment confirmed. Your book will be shared with <span className="text-violet-400 font-semibold">{tier.reach} readers</span>.
+            Your manuscript and details have been sent to our review team. If approved, we will partner on the <span className="text-violet-400 font-semibold">{tier.name} package</span>.
           </p>
           
           <div className="rounded-xl border border-violet-500/20 bg-violet-500/5 p-4 mb-6">
             <div className="flex items-center justify-center gap-2 text-sm text-white/70">
               <Shield className="h-4 w-4 text-violet-400" />
-              <span>Reader identities remain protected</span>
+              <span>We will contact you shortly</span>
             </div>
           </div>
           
           <p className="text-sm text-white/40 mb-8">
-            Remember: We guarantee reach, not reviews. Your book&apos;s quality determines engagement.
+            Remember: We do not charge upfront publishing fees. If approved, we will fully fund and execute your marketing campaign.
           </p>
           
           {user ? (
@@ -300,7 +298,7 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-background">
       <div className="absolute inset-0 bg-gradient-to-br from-violet-950/30 via-black to-fuchsia-950/20 pointer-events-none" />
       
       <div className="relative max-w-2xl mx-auto px-4 py-8">
@@ -336,24 +334,41 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
             </div>
 
             {!user && (
-              <div className="space-y-2 mb-8">
-                <Label htmlFor="guestEmail" className="text-white/70">Your Email Address *</Label>
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
-                  <Input
-                    id="guestEmail"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={formData.guestEmail}
-                    onChange={(e) => {
-                      updateFormData({ guestEmail: e.target.value })
-                      setGuestEmail(e.target.value)
-                    }}
-                    className="pl-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-violet-500 focus:ring-violet-500 h-12 rounded-xl"
-                    required
-                  />
+              <div className="space-y-4 mb-8">
+                <div className="space-y-2">
+                  <Label htmlFor="guestEmail" className="text-white/70">Your Email Address *</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
+                    <Input
+                      id="guestEmail"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={formData.guestEmail}
+                      onChange={(e) => {
+                        updateFormData({ guestEmail: e.target.value })
+                        setGuestEmail(e.target.value)
+                      }}
+                      className="pl-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-violet-500 focus:ring-violet-500 h-12 rounded-xl"
+                      required
+                    />
+                  </div>
                 </div>
-                <p className="text-xs text-white/30">We&apos;ll use this to link your campaign to your account later.</p>
+
+                <div className="space-y-2">
+                  <Label htmlFor="guestPhone" className="text-white/70">Phone Number *</Label>
+                  <div className="relative">
+                    <Input
+                      id="guestPhone"
+                      type="tel"
+                      placeholder="+1 (555) 000-0000"
+                      value={formData.phone}
+                      onChange={(e) => updateFormData({ phone: e.target.value })}
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-violet-500 focus:ring-violet-500 h-12 rounded-xl"
+                      required
+                    />
+                  </div>
+                  <p className="text-xs text-white/30">We&apos;ll use this to contact you if your manuscript is approved.</p>
+                </div>
               </div>
             )}
 
@@ -373,7 +388,7 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
                     </div>
                     <div>
                       <h3 className="font-semibold text-white text-lg">Not yet published</h3>
-                      <p className="text-sm text-white/40">ARC / Pre-launch manuscript</p>
+                      <p className="text-sm text-white/40">Unpublished manuscript</p>
                     </div>
                   </div>
                 </div>
@@ -407,13 +422,14 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
               </button>
             </div>
 
-            <Button 
-              onClick={() => setStep(2)}
-              className="w-full bg-white text-black font-medium hover:bg-white/90 h-12 rounded-xl mt-8"
-            >
-              Continue
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+              <Button 
+                onClick={() => setStep(2)}
+                className="w-full bg-white text-black font-medium hover:bg-white/90 h-12 rounded-xl mt-8"
+                disabled={!user && (!formData.guestEmail || !formData.phone)}
+              >
+                Continue
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
           </div>
         )}
 
@@ -670,16 +686,16 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-3xl font-bold text-white">${tier.price}</div>
-                      <div className="text-xs text-white/30">one-time</div>
+                      <div className="text-3xl font-bold text-white">{tier.price}</div>
+                      <div className="text-xs text-white/30">Royalty Paid to You</div>
                     </div>
                   </div>
 
                   <div className="rounded-xl bg-gradient-to-r from-violet-500/10 to-fuchsia-500/10 border border-violet-500/20 p-4 mb-5">
                     <div className="flex items-center gap-3">
-                      <Users className="h-5 w-5 text-violet-400" />
+                      <Sparkles className="h-5 w-5 text-violet-400" />
                       <span className="text-2xl font-bold text-white">{tier.reach}</span>
-                      <span className="text-white/50">guaranteed readers reached</span>
+                      <span className="text-white/50">Distribution Path</span>
                     </div>
                   </div>
 
@@ -700,126 +716,36 @@ export function CampaignWizard({ user, onComplete }: CampaignWizardProps) {
               <div className="flex items-start gap-3">
                 <Shield className="h-5 w-5 text-violet-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm text-white/70 font-medium">What we guarantee</p>
+                  <p className="text-sm text-white/70 font-medium">Free Marketing Guarantee</p>
                   <p className="text-xs text-white/40 mt-1">
-                    Your book will be shown to the guaranteed number of readers. Reviews depend on your book&apos;s 
-                    quality and appeal — we never pay for reviews. Reader identities are protected under privacy laws.
+                    Liberelo operates entirely on commission. By submitting this application, you will not be charged any fees. Due to high volume, not all books will be approved for partnership.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Payment Error */}
+            {/* Error Message */}
             {paymentError && (
               <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4">
                 <p className="text-sm text-red-400">{paymentError}</p>
               </div>
             )}
 
-            {/* Loading state while creating campaign */}
-            {loading && (
-              <div className="flex items-center justify-center gap-3 py-4">
-                <Loader2 className="h-5 w-5 animate-spin text-violet-400" />
-                <span className="text-white/60 text-sm">Setting up your campaign...</span>
-              </div>
-            )}
-
-            {/* PayPal Smart Payment Buttons */}
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-              <div className="text-center mb-4">
-                <p className="text-white/70 text-sm font-medium mb-1">
-                  Pay <span className="text-violet-400 font-bold text-lg">${getTier().price}</span> to launch your campaign
-                </p>
-                <p className="text-white/40 text-xs">Secure payment powered by PayPal</p>
-              </div>
-              
-              <PayPalScriptProvider
-                options={{
-                  clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "",
-                  currency: "USD",
-                  intent: "capture",
-                }}
-              >
-                <PayPalButtons
-                  style={{
-                    layout: "vertical",
-                    color: "gold",
-                    shape: "rect",
-                    label: "pay",
-                    height: 50,
-                  }}
-                  disabled={loading}
-                  createOrder={async () => {
-                    setPaymentError(null)
-
-                    // Create campaign first (PENDING_PAYMENT) if not already created
-                    let currentCampaignId = campaignId
-                    if (!currentCampaignId) {
-                      currentCampaignId = await handleCreateCampaign()
-                      if (!currentCampaignId) {
-                        throw new Error("Failed to create campaign")
-                      }
-                    }
-
-                    // Create PayPal order via our API
-                    const tier = getTier()
-                    const response = await fetch("/api/paypal/create-order", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        campaignId: currentCampaignId,
-                        amount: tier.price,
-                        description: `Liberelo ${tier.name} Plan - ${formData.title}`,
-                      }),
-                    })
-
-                    if (!response.ok) {
-                      const error = await response.json()
-                      throw new Error(error.error || "Failed to create order")
-                    }
-
-                    const data = await response.json()
-                    return data.orderID
-                  }}
-                  onApprove={async (data) => {
-                    try {
-                      // Capture the payment via our API
-                      const response = await fetch("/api/paypal/capture-order", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                          orderID: data.orderID,
-                          campaignId: campaignId,
-                        }),
-                      })
-
-                      if (!response.ok) {
-                        const error = await response.json()
-                        throw new Error(error.error || "Failed to capture payment")
-                      }
-
-                      const captureData = await response.json()
-                      
-                      if (captureData.success) {
-                        setCampaignCreated(true)
-                      } else {
-                        setPaymentError("Payment was not completed. Please try again.")
-                      }
-                    } catch (error) {
-                      console.error("Payment capture error:", error)
-                      setPaymentError("Payment processing failed. Please try again or contact support.")
-                    }
-                  }}
-                  onError={(err) => {
-                    console.error("PayPal error:", err)
-                    setPaymentError("PayPal encountered an error. Please try again.")
-                  }}
-                  onCancel={() => {
-                    setPaymentError("Payment was cancelled. You can try again when ready.")
-                  }}
-                />
-              </PayPalScriptProvider>
-            </div>
+            {/* Submit Application Button */}
+            <Button 
+              onClick={handleCreateCampaign}
+              disabled={loading}
+              className="w-full bg-violet-600 hover:bg-violet-700 text-white font-medium h-14 rounded-xl text-lg shadow-lg"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Submitting Application...
+                </>
+              ) : (
+                "Submit Application"
+              )}
+            </Button>
           </div>
         )}
       </div>

@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useAppStore } from "@/stores/app-store"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, BookOpen, Target, Users, TrendingUp } from "lucide-react"
@@ -10,14 +11,14 @@ export function HowItWorksPage() {
   const steps = [
     {
       num: "01",
-      title: "Submit Your Manuscript",
-      desc: "Upload your pre-launch ARC or link your published Amazon page. Our system securely processes your work.",
+      title: "Submit & Evaluate",
+      desc: "Submit your unpublished manuscript or link your published Amazon page. Our editorial team reviews your work.",
       icon: BookOpen,
     },
     {
       num: "02",
-      title: "Select Your Guaranteed Reach",
-      desc: "Choose exactly how many genre-matched readers you want your book placed in front of. Real readers, real guarantees.",
+      title: "Distribution Strategy",
+      desc: "Choose between Wide distribution across all retailers or Exclusive placement solely on Liberelo.",
       icon: Target,
     },
     {
@@ -29,7 +30,7 @@ export function HowItWorksPage() {
     {
       num: "04",
       title: "Track Authentic Results",
-      desc: "Monitor your dashboard as readers claim, read, and cross-post their honest reviews to Amazon and Goodreads.",
+      desc: "Monitor your dashboard as our team executes marketing campaigns and reports your transparent royalties.",
       icon: TrendingUp,
     },
   ]
@@ -40,10 +41,12 @@ export function HowItWorksPage() {
         <Button
           variant="ghost"
           className="self-start -ml-4 mb-12 text-foreground/60 hover:text-foreground hover:bg-transparent tracking-wide"
-          onClick={() => setCurrentView("landing")}
+          asChild
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Home
+          <Link href="/">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Home
+          </Link>
         </Button>
 
         <header className="mb-24 text-center">
@@ -96,14 +99,14 @@ export function HowItWorksPage() {
             Ready to break the silence?
           </h2>
           <p className="text-lg text-secondary-foreground/80 max-w-2xl mx-auto mb-10 relative z-10">
-            Join thousands of authors who have traded hope-based marketing for guaranteed reader reach.
+            Join authors who trust Liberelo for transparent, commission-based book publishing.
           </p>
           <Button 
             size="lg"
             className="bg-primary text-primary-foreground hover:bg-primary/90 h-14 px-10 rounded-xl font-medium text-lg tracking-wide relative z-10"
-            onClick={() => setCurrentView("signup")}
+            asChild
           >
-            Launch Your Campaign
+            <Link href="/signup">Submit Manuscript</Link>
           </Button>
         </div>
       </div>

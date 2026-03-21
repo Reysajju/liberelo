@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
+import { ClaimStatus } from "@prisma/client"
 
 export async function PATCH(
   request: NextRequest,
@@ -11,7 +12,7 @@ export async function PATCH(
     const { status, reviewUrl } = body
 
     const updateData: {
-      status?: string
+      status?: ClaimStatus
       reviewUrl?: string
       reviewPostedAt?: Date
     } = {}

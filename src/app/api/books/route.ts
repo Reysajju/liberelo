@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
       kindleUnlimited,
       authorId: providedAuthorId,
       email,
+      phone,
     } = body
 
     let authorId = providedAuthorId
@@ -32,6 +33,7 @@ export async function POST(request: NextRequest) {
         profile = await db.profile.create({
           data: {
             email,
+            phone,
             name: author || email.split("@")[0],
             userType: "AUTHOR",
           },

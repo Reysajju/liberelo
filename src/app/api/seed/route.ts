@@ -116,7 +116,7 @@ export async function POST() {
         authorId: author.id,
         campaignType: "PRE_LAUNCH",
         targetReviewCount: 100,
-        name: "Starfall ARC Distribution",
+        name: "Starfall Marketing Campaign",
         description: "Get an exclusive early copy of my new sci-fi novel! Looking for detailed reviews to post on launch day.",
         totalAmount: 89,
         status: "ACTIVE",

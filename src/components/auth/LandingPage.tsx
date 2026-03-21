@@ -24,25 +24,25 @@ export function LandingPage() {
           <div className="text-center max-w-4xl mx-auto space-y-8">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-medium uppercase tracking-[0.2em] mb-4">
               <Star className="h-3.5 w-3.5 fill-primary" />
-              <span>For Sophisticated Authors</span>
+              <span>Commission-Based Publishing Partnership</span>
             </div>
             
             <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight text-foreground leading-[1.1]">
-              Literary Discovery, <br />
-              <span className="text-primary italic">Elevated.</span>
+              We Publish, Market, <br />
+              <span className="text-primary italic">& Sell Your Book.</span>
             </h1>
             
-            <p className="text-lg md:text-xl text-foreground/70 font-sans max-w-2xl mx-auto leading-relaxed">
-              Liberate your work from the relentless noise of self-publishing. We secure authentic, genre-matched readers for your manuscript—guaranteed.
+            <p className="text-lg md:text-xl text-foreground/70 font-sans max-w-3xl mx-auto leading-relaxed">
+              Liberate your work from the relentless noise of self-publishing. Submit your manuscript for approval, and we handle the marketing, community building, and sales—all on a transparent commission basis. Zero upfront publishing fees.
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
               <Button 
                 size="lg" 
                 className="w-full sm:w-auto h-14 px-8 rounded-xl font-medium font-sans text-lg tracking-wide shadow-sm"
-                onClick={() => setCurrentView("signup")}
+                onClick={() => setCurrentView("campaign-new")}
               >
-                Launch Your Campaign
+                Submit Your Manuscript
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Link 
@@ -57,15 +57,15 @@ export function LandingPage() {
             <div className="pt-12 flex items-center justify-center gap-8 text-sm text-foreground/50 font-sans tracking-wide">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-secondary" />
-                <span>Verified Reviewers</span>
+                <span>Zero Upfront Fees</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-secondary" />
-                <span>Amazon Compliant</span>
+                <span>Wide & Exclusive Options</span>
               </div>
               <div className="hidden sm:flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-secondary" />
-                <span>Zero Bots</span>
+                <span>Transparent Royalties</span>
               </div>
             </div>
           </div>
@@ -84,10 +84,10 @@ export function LandingPage() {
                 </h2>
               </div>
               <p className="text-lg text-foreground/70 font-sans leading-relaxed">
-                The current publishing ecosystem is fractured. Brilliant manuscripts languish in obscurity because visibility is gatekept by algorithms that reward established momentum.
+                The current publishing ecosystem is fractured. Brilliant manuscripts languish in obscurity because visibility is gatekept by algorithms that reward established momentum, and traditional publishers reject 99% of submissions.
               </p>
               <p className="text-lg text-foreground/70 font-sans leading-relaxed">
-                Liberelo circumvents the algorithm. We pair authors directly with readers who possess a proven history of devouring and thoughtfully critiquing your exact sub-genre. 
+                Liberelo circumvents the algorithm. If your book meets our company standards, we invest our resources to publish, market, and distribute it directly to readers. You focus on writing; we focus on scaling your readership on a purely commission-driven model.
               </p>
               <div className="pt-4">
                 <Link 
@@ -107,14 +107,14 @@ export function LandingPage() {
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-6">
                   <Shield className="w-6 h-6" />
                 </div>
-                <h3 className="font-serif text-2xl font-medium text-foreground">The Liberelo Guarantee</h3>
+                <h3 className="font-serif text-2xl font-medium text-foreground">The Liberelo Partnership</h3>
                 <p className="text-foreground/70 font-sans leading-relaxed">
-                  We do not sell reviews—doing so would violate Amazon's terms of service and compromise the integrity of the literary critique. 
+                  We only succeed when you succeed. We do not charge predatory upfront publishing or marketing fees. We earn our revenue strictly from the sales we generate for your book.
                 </p>
                 <div className="p-6 bg-secondary/5 border border-secondary/20 rounded-xl relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/3" />
                   <p className="relative z-10 text-foreground font-serif text-lg italic tracking-wide">
-                    "We guarantee that your work will be placed directly in the hands of readers demanding exactly what you write."
+                    "We guarantee that your work will be placed directly in the hands of readers, backed by our dedicated marketing engine and sales network."
                   </p>
                 </div>
               </div>
@@ -141,19 +141,9 @@ export function LandingPage() {
               <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform">
                 <Target className="w-7 h-7" />
               </div>
-              <h3 className="font-serif text-2xl font-medium text-foreground mb-4">Precision Targeting</h3>
-              <p className="text-foreground/70 font-sans leading-relaxed">
-                Connect exclusively with readers who have a demonstrated history in your specific sub-genre and trope preferences.
-              </p>
-            </div>
-
-            <div className="bg-card border border-border/50 p-10 rounded-3xl hover:border-primary/50 transition-colors group">
-              <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform">
-                <BookOpen className="w-7 h-7" />
-              </div>
-              <h3 className="font-serif text-2xl font-medium text-foreground mb-4">Secure Distribution</h3>
-              <p className="text-foreground/70 font-sans leading-relaxed">
-                For pre-launch ARCs, our proprietary viewer ensures your manuscript cannot be copied, downloaded, or shared maliciously.
+              <h3 className="font-serif text-2xl font-medium text-foreground mb-4">Complete Marketing</h3>
+              <p className="text-foreground/70 font-sans leading-relaxed text-sm lg:text-base">
+                From pre-launch manuscript evaluation to long-tail advertising, our team handles all promotional heavy-lifting to ensure your book discovers its true audience.
               </p>
             </div>
 
@@ -161,9 +151,19 @@ export function LandingPage() {
               <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform">
                 <TrendingUp className="w-7 h-7" />
               </div>
-              <h3 className="font-serif text-2xl font-medium text-foreground mb-4">Transparent Metrics</h3>
+              <h3 className="font-serif text-2xl font-medium text-foreground mb-4">Dual Distribution</h3>
               <p className="text-foreground/70 font-sans leading-relaxed">
-                Monitor reader progress, track cross-posts to retail platforms, and view engagement analytics in real-time.
+                Choose to go Wide (Amazon, B&N, Lulu, Apple) or maximize your margins exclusively on Liberelo's proprietary proprietary selling machine.
+              </p>
+            </div>
+
+            <div className="bg-card border border-border/50 p-10 rounded-3xl hover:border-primary/50 transition-colors group">
+              <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform">
+                <Shield className="w-7 h-7" />
+              </div>
+              <h3 className="font-serif text-2xl font-medium text-foreground mb-4">Transparent Royalties</h3>
+              <p className="text-foreground/70 font-sans leading-relaxed">
+                Results may vary, but royalties won't. You receive an exact, transparent percentage of your sales after costs and taxes, dictated perfectly by your selected package.
               </p>
             </div>
           </div>
@@ -172,24 +172,24 @@ export function LandingPage() {
 
       {/* CTA Section */}
       <section className="mb-24 mx-4 md:mx-auto max-w-5xl">
-        <div className="bg-foreground text-background rounded-3xl p-12 md:p-20 text-center relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
+        <div className="bg-card border border-border/50 text-foreground rounded-3xl p-12 md:p-20 text-center relative overflow-hidden shadow-xl">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
           
           <div className="relative z-10 max-w-3xl mx-auto space-y-8">
             <h2 className="font-serif text-4xl md:text-5xl font-medium leading-tight">
               Ready to break the silence?
             </h2>
-            <p className="text-xl text-background/80 font-sans leading-relaxed">
-              Join the exclusive tier of authors securing guaranteed visibility for their life's work.
+            <p className="text-xl text-foreground/80 font-sans leading-relaxed">
+              Submit your manuscript and contact details. Let our team analyze your work for our next massive campaign.
             </p>
             <div className="pt-8">
               <Button 
                 size="lg" 
                 className="bg-primary text-primary-foreground hover:bg-primary/90 h-16 px-10 rounded-xl font-medium font-sans text-lg tracking-wide shadow-lg border-none"
-                onClick={() => setCurrentView("signup")}
+                onClick={() => setCurrentView("campaign-new")}
               >
-                Commence Registration
+                Submit Manuscript
               </Button>
             </div>
           </div>

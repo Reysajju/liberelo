@@ -6,7 +6,7 @@ export function Footer() {
   const { setCurrentView } = useAppStore()
 
   return (
-    <footer className="mt-auto border-t border-white/5 bg-black/80 backdrop-blur-xl">
+    <footer className="mt-auto border-t border-border bg-card/80 backdrop-blur-xl">
       <div className="container px-4 lg:px-8 py-16">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12 max-w-7xl mx-auto">
           {/* Brand */}

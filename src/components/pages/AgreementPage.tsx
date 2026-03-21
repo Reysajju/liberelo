@@ -1,22 +1,23 @@
 "use client"
 
 import { useAppStore } from "@/stores/app-store"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, BookOpen } from "lucide-react"
 
 export function AgreementPage() {
-  const { setCurrentView } = useAppStore()
-
   return (
     <div className="min-h-screen bg-background">
       <div className="container px-6 lg:px-8 py-20 max-w-4xl mx-auto">
         <Button
           variant="ghost"
           className="self-start -ml-4 mb-12 text-foreground/60 hover:text-foreground hover:bg-transparent tracking-wide"
-          onClick={() => setCurrentView("landing")}
+          asChild
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Home
+          <Link href="/">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Home
+          </Link>
         </Button>
 
         <header className="mb-20 text-center">
@@ -46,7 +47,7 @@ export function AgreementPage() {
               Liberelo guarantees <strong>reader reach</strong> commensurate with your purchased campaign tier. We guarantee that your book will be placed in the library and claimed by the specified number of genre-matched readers. 
             </p>
             <p>
-              We <strong>do not</strong> guarantee a specific number of reviews, nor do we guarantee the star rating or sentiment of any review. The conversion of a "reach" into a "review" is dependent solely on the merit and appeal of your book.
+              We <strong>do not</strong> guarantee specific sales volumes. The conversion of a "reach" into a "sale" is dependent solely on the merit and appeal of your book.
             </p>
           </section>
 

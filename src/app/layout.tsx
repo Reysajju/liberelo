@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -16,14 +18,13 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://liberelo.com"),
   title: {
-    default: "Liberelo | Premium Literary Discovery & Guaranteed Reader Reach",
+    default: "Liberelo | The Commission-Based Publishing Partner",
     template: "%s | Liberelo"
   },
-  description: "Liberate your manuscript from algorithms. Connect with passionate, verified readers who love your specific genre. We guarantee reach, secure ARC distribution, and authentic engagement.",
+  description: "Liberate your manuscript from algorithms. Connect with passionate, verified readers who love your specific genre. We provide complete marketing, wide and exclusive distribution, and transparent royalties.",
   keywords: [
-    "book reviews", "ARC distribution", "author marketing", "book launch", 
-    "review platform", "indie authors", "book promotion", "guaranteed readers", 
-    "literary discovery", "author services"
+    "book publishing", "manuscript submission", "author marketing", "book launch", 
+    "indie author", "publishing agency", "book promotion"
   ],
   authors: [{ name: "Liberelo Team" }],
   creator: "Liberelo",
@@ -51,10 +52,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Liberelo | Guaranteed Reader Reach for Authors",
-    description: "Liberate your manuscript from the algorithm. Secure ARC distribution and verified review boosting.",
+    title: "Liberelo | The Commission-Based Publishing Partner",
+    description: "Liberate your manuscript from the algorithm. Secure manuscript submission and performance marketing.",
     creator: "@liberelo_app",
-    images: ["/logo.png"],
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
@@ -78,12 +79,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${playfair.variable} ${inter.variable} antialiased bg-background text-foreground font-sans`}
       >
-        {children}
-        <Toaster />
+        <ThemeProvider 
+          attribute="class" 
+          defaultTheme="system" 
+          enableSystem
+        >
+          {children}
+          <Toaster />
+          <ThemeToggle />
+        </ThemeProvider>
       </body>
     </html>
   );

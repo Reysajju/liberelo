@@ -310,7 +310,7 @@ export function LibraryPage({ user }: LibraryPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-background">
       <div className="absolute inset-0 bg-gradient-to-br from-violet-950/30 via-black to-fuchsia-950/20 pointer-events-none" />
       
       <div className="relative container px-4 lg:px-8 py-8">

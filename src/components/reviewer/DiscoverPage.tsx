@@ -163,7 +163,7 @@ export function DiscoverPage({ user }: DiscoverPageProps) {
                   ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
                   : "bg-violet-500/10 text-violet-400 border-violet-500/20"
               }>
-                {campaign.campaignType === "PRE_LAUNCH" ? "ARC" : "Published"}
+                {campaign.campaignType === "PRE_LAUNCH" ? "Unpublished" : "Published"}
               </Badge>
             </div>
 
@@ -222,7 +222,7 @@ export function DiscoverPage({ user }: DiscoverPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-background">
       <div className="absolute inset-0 bg-gradient-to-br from-violet-950/30 via-black to-fuchsia-950/20 pointer-events-none" />
       
       <div className="relative container px-4 lg:px-8 py-8">
@@ -245,7 +245,7 @@ export function DiscoverPage({ user }: DiscoverPageProps) {
           </div>
           <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
             <p className="text-2xl font-semibold text-violet-400">{preLaunchCampaigns.length}</p>
-            <p className="text-xs text-white/40">ARCs (Free)</p>
+            <p className="text-xs text-white/40">Exclusive</p>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
             <p className="text-2xl font-semibold text-white">{postLaunchCampaigns.length}</p>
@@ -290,7 +290,7 @@ export function DiscoverPage({ user }: DiscoverPageProps) {
               value="arc"
               className="data-[state=active]:bg-white/10 data-[state=active]:text-white text-white/50 rounded-lg"
             >
-              Free ARCs ({preLaunchCampaigns.length})
+              Free Exclusives ({preLaunchCampaigns.length})
             </TabsTrigger>
             <TabsTrigger 
               value="published"
@@ -327,7 +327,7 @@ export function DiscoverPage({ user }: DiscoverPageProps) {
                 {preLaunchCampaigns.length === 0 ? (
                   <div className="text-center py-16 rounded-2xl border border-dashed border-white/10">
                     <FileText className="h-12 w-12 mx-auto text-white/20 mb-4" />
-                    <h3 className="font-medium text-white mb-2">No ARCs Available</h3>
+                    <h3 className="font-medium text-white mb-2">No Exclusives Available</h3>
                     <p className="text-sm text-white/40">Check back soon for new advance review copies.</p>
                   </div>
                 ) : (
@@ -368,7 +368,7 @@ export function DiscoverPage({ user }: DiscoverPageProps) {
               </div>
               <div>
                 <p className="font-medium text-white">Claim Free Books</p>
-                <p className="text-white/40">Browse and claim ARCs from independent authors</p>
+                <p className="text-white/40">Browse and read exclusive titles from independent authors</p>
               </div>
             </div>
             <div className="flex gap-3">

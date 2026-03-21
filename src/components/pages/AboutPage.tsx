@@ -1,22 +1,23 @@
 "use client"
 
 import { useAppStore } from "@/stores/app-store"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, BookOpen, PenTool, Award } from "lucide-react"
 
 export function AboutPage() {
-  const { setCurrentView } = useAppStore()
-
   return (
     <div className="min-h-screen bg-background">
       <div className="container px-6 lg:px-8 py-20 max-w-4xl mx-auto">
         <Button
           variant="ghost"
           className="self-start -ml-4 mb-12 text-foreground/60 hover:text-foreground hover:bg-transparent tracking-wide"
-          onClick={() => setCurrentView("landing")}
+          asChild
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Home
+          <Link href="/">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Home
+          </Link>
         </Button>
 
         <header className="mb-20 text-center">
@@ -31,12 +32,9 @@ export function AboutPage() {
 
         <section className="space-y-16">
           <div className="prose prose-lg dark:prose-invert max-w-none text-foreground/80 font-sans leading-relaxed">
-            <h2 className="font-serif text-3xl font-medium text-foreground mb-6">The Endless Loop</h2>
+            <h2 className="font-serif text-3xl font-medium text-foreground mb-6">The Nonsense Loop</h2>
             <p>
-              Every author knows the trap: you need reviews to get sales, but you need sales to get reviews. Traditional platforms demand proven track records before they'll promote your work. Review services charge exorbitant fees and make promises they can't legally keep.
-            </p>
-            <p>
-              Liberelo was founded on a simple premise: great books die in silence every day, not because they aren't worth reading, but because they can't break through the initial visibility barrier.
+              Liberating authors from the nonsense loop. We connect your books with real readers, guaranteed. An exclusive community for literary discovery.
             </p>
           </div>
 
@@ -56,7 +54,7 @@ export function AboutPage() {
                 <BookOpen className="w-6 h-6" />
               </div>
               <h3 className="font-serif text-xl font-medium text-foreground">Reader Led</h3>
-              <p className="text-sm text-foreground/70">We never pay for reviews. We guarantee reach; readers decide the rest.</p>
+              <p className="text-sm text-foreground/70">We connect your books with real readers, guaranteed. An exclusive community.</p>
             </div>
             
             <div className="relative z-10 text-center space-y-4">
@@ -71,10 +69,10 @@ export function AboutPage() {
           <div className="prose prose-lg dark:prose-invert max-w-none text-foreground/80 font-sans leading-relaxed">
             <h2 className="font-serif text-3xl font-medium text-foreground mb-6">Our Promise</h2>
             <p>
-              We don't guarantee five-star reviews. We guarantee that your life's work will be placed directly in front of readers who devour your specific genre. We strip away the noise, the fake engagement, and the pay-to-play review farms.
+              We guarantee that your life's work will be placed directly in front of readers who devour your specific genre. We strip away the noise of upfront publishing packages and predatory minimums.
             </p>
             <p>
-              At Liberelo, we believe that an author's only job should be writing the next great book. Leave the discovery to us.
+              At Liberelo, we believe that an author's only job should be writing the next great book. Leave the publishing, distribution, and marketing to us.
             </p>
           </div>
         </section>
@@ -83,9 +81,9 @@ export function AboutPage() {
           <Button 
             size="lg"
             className="h-14 px-10 rounded-xl font-medium text-lg tracking-wide"
-            onClick={() => setCurrentView("signup")}
+            asChild
           >
-            Join Our Community
+            <Link href="/signup">Join Our Community</Link>
           </Button>
         </div>
       </div>

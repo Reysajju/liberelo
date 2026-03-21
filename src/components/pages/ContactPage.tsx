@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useAppStore } from "@/stores/app-store"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,7 +11,6 @@ import { ArrowLeft, Send, Mail, MapPin } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
 export function ContactPage() {
-  const { setCurrentView } = useAppStore()
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
 
@@ -35,10 +35,12 @@ export function ContactPage() {
         <Button
           variant="ghost"
           className="self-start -ml-4 mb-12 text-foreground/60 hover:text-foreground hover:bg-transparent tracking-wide"
-          onClick={() => setCurrentView("landing")}
+          asChild
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Home
+          <Link href="/">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Home
+          </Link>
         </Button>
 
         <div className="grid lg:grid-cols-2 gap-16">

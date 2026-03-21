@@ -180,8 +180,8 @@ export function AuthorDashboard({ user }: AuthorDashboardProps) {
               <Badge variant="outline" className={getStatusBadge(campaign.status)}>
                 {campaign.status.replace("_", " ")}
               </Badge>
-              <Badge variant="outline" className={getCampaignTypeBadge(campaign.campaignType)}>
-                {campaign.campaignType === "PRE_LAUNCH" ? "ARC" : "Boost"}
+              <Badge variant={campaign.campaignType === "PRE_LAUNCH" ? "default" : "secondary"}>
+                {campaign.campaignType === "PRE_LAUNCH" ? "Unpublished" : "Published"}
               </Badge>
               <Badge variant="outline" className={getTierBadge(campaign.tier)}>
                 {campaign.tier || 'Starter'}
@@ -243,7 +243,7 @@ export function AuthorDashboard({ user }: AuthorDashboardProps) {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-background">
       {/* Gradient Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-violet-950/30 via-black to-fuchsia-950/20 pointer-events-none" />
       

@@ -87,7 +87,7 @@ function HomeContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-black">
+      <div className="min-h-screen flex flex-col bg-background">
         <main className="flex-1 flex items-center justify-center">
           <div className="flex flex-col items-center gap-6">
             <div className="relative">
@@ -169,7 +169,7 @@ function HomeContent() {
 export default function Home() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex flex-col bg-black">
+      <div className="min-h-screen flex flex-col bg-background">
         <main className="flex-1 flex items-center justify-center">
           <div className="h-16 w-16 rounded-full border-2 border-violet-500 border-t-transparent animate-spin" />
         </main>

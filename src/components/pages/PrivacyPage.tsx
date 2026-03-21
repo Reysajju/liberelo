@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useAppStore } from "@/stores/app-store"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Shield } from "lucide-react"
@@ -13,10 +14,12 @@ export function PrivacyPolicy() {
         <Button
           variant="ghost"
           className="self-start -ml-4 mb-12 text-foreground/60 hover:text-foreground hover:bg-transparent tracking-wide"
-          onClick={() => setCurrentView("landing")}
+          asChild
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Home
+          <Link href="/">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Home
+          </Link>
         </Button>
 
         <header className="mb-20 text-center">
@@ -36,14 +39,14 @@ export function PrivacyPolicy() {
           <section>
             <h2 className="font-serif text-3xl font-medium text-foreground mb-6">1. Data Collection</h2>
             <p>
-              Liberelo collects only the information strictly necessary to facilitate the connection between authors and readers. For authors, this includes pen names, contact information, and manuscript metadata. For readers, this includes genre preferences, reading history on the platform, and verifying cross-platform review activity.
+              Liberelo collects only the information strictly necessary to facilitate the connection between authors and readers. For authors, this includes pen names, contact information, and manuscript metadata. For readers, this includes genre preferences, reading history on the platform, and verifying cross-platform reading engagement.
             </p>
           </section>
 
           <section>
             <h2 className="font-serif text-3xl font-medium text-foreground mb-6">2. Anonymity and Protection</h2>
             <p>
-              Reader identities are legally protected. Authors receive aggregate data regarding their campaigns (e.g., "75 readers claimed your book. 45 have completed it.") but will never receive the direct contact information or personal identities of individual reviewers. We comply with GDPR, CCPA, and all applicable global privacy standards.
+              Reader identities are legally protected. Authors receive aggregate data regarding their campaigns (e.g., "75 readers claimed your book. 45 have completed it.") but will never receive the direct contact information or personal identities of individual readers. We comply with GDPR, CCPA, and all applicable global privacy standards.
             </p>
           </section>
 
@@ -57,7 +60,7 @@ export function PrivacyPolicy() {
           <section>
             <h2 className="font-serif text-3xl font-medium text-foreground mb-6">4. Manuscript Security</h2>
             <p>
-              Pre-published Advanced Reader Copies (ARCs) are hosted on our proprietary viewing infrastructure. Manuscripts are encrypted at rest and watermarked during access to prevent unauthorized redistribution or piracy. We do not claim any copyright or ownership over your intellectual property.
+              Unpublished manuscripts are hosted on our proprietary review infrastructure. Manuscripts are encrypted at rest and watermarked during access to prevent unauthorized redistribution or piracy. We do not claim any copyright or ownership over your intellectual property.
             </p>
           </section>
 
@@ -66,9 +69,9 @@ export function PrivacyPolicy() {
             <p className="mb-6">Our legal and compliance team is available to address any concerns.</p>
             <Button 
               variant="outline"
-              onClick={() => setCurrentView("contact")}
+              asChild
             >
-              Contact Compliance
+              <Link href="/contact">Contact Privacy Team</Link>
             </Button>
           </section>
         </div>

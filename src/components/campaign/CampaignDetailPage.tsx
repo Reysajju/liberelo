@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAppStore } from "@/stores/app-store"
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js"
 import { 
   ArrowLeft,
   BookOpen, 
@@ -72,8 +71,6 @@ export function CampaignDetailPage({ campaignId, user }: CampaignDetailPageProps
   const { setCurrentView } = useAppStore()
   const [campaign, setCampaign] = useState<Campaign | null>(null)
   const [loading, setLoading] = useState(true)
-  const [paymentError, setPaymentError] = useState<string | null>(null)
-  const [capturing, setCapturing] = useState(false)
 
   useEffect(() => {
     fetchCampaign()
@@ -116,7 +113,7 @@ export function CampaignDetailPage({ campaignId, user }: CampaignDetailPageProps
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-white/40">Loading campaign...</div>
       </div>
     )
@@ -124,7 +121,7 @@ export function CampaignDetailPage({ campaignId, user }: CampaignDetailPageProps
 
   if (!campaign) {
     return (
-      <div className="min-h-screen bg-black flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center">
         <p className="text-white/40 mb-4">Campaign not found</p>
         <Button onClick={() => setCurrentView("dashboard")} className="bg-white text-black">
           Back to Dashboard
@@ -155,7 +152,7 @@ export function CampaignDetailPage({ campaignId, user }: CampaignDetailPageProps
   )
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-background">
       <div className="absolute inset-0 bg-gradient-to-br from-violet-950/30 via-black to-fuchsia-950/20 pointer-events-none" />
       
       <div className="relative container px-4 lg:px-8 py-8">
@@ -205,113 +202,25 @@ export function CampaignDetailPage({ campaignId, user }: CampaignDetailPageProps
               </Badge>
             )}
 
-            {/* If Pending Payment, show Payment Required UI */}
-            {campaign.status === "PENDING_PAYMENT" ? (
+            {/* If Pending Review, show Evaluation UI */}
+            {campaign.status === "PENDING_REVIEW" ? (
               <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-6 mb-6">
                 <div className="flex items-start gap-4 mb-6">
                   <div className="p-3 rounded-xl bg-amber-500/20">
                     <Shield className="h-6 w-6 text-amber-500" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white">Payment Required</h3>
-                    <p className="text-sm text-white/50">Your campaign is drafted but not yet active. Complete the payment to start reaching readers.</p>
+                    <h3 className="font-semibold text-white">Under Evaluation</h3>
+                    <p className="text-sm text-white/50">Your manuscript is currently being evaluated by our editorial team. We will notify you via email once a partnership decision has been made.</p>
                   </div>
                 </div>
-
-                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                  <div>
-                    <p className="text-2xl font-bold text-white">${campaign.totalAmount}</p>
-                    <p className="text-sm text-white/40">One-time launching fee</p>
-                  </div>
-
-                  <div className="w-full md:w-64">
-                    <PayPalScriptProvider
-                      options={{
-                        clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "",
-                        currency: "USD",
-                        intent: "capture",
-                      }}
-                    >
-                      <PayPalButtons
-                        style={{
-                          layout: "horizontal",
-                          color: "gold",
-                          shape: "rect",
-                          label: "pay",
-                          height: 45,
-                        }}
-                        createOrder={async () => {
-                          setPaymentError(null)
-                          const response = await fetch("/api/paypal/create-order", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                              campaignId: campaign.id,
-                              amount: campaign.totalAmount,
-                              description: `Liberelo Campaign Resume - ${campaign.book.title}`,
-                            }),
-                          })
-
-                          if (!response.ok) {
-                            const error = await response.json()
-                            throw new Error(error.error || "Failed to create order")
-                          }
-
-                          const data = await response.json()
-                          return data.orderID
-                        }}
-                        onApprove={async (data) => {
-                          setCapturing(true)
-                          try {
-                            const response = await fetch("/api/paypal/capture-order", {
-                              method: "POST",
-                              headers: { "Content-Type": "application/json" },
-                              body: JSON.stringify({
-                                orderID: data.orderID,
-                                campaignId: campaign.id,
-                              }),
-                            })
-
-                            if (!response.ok) {
-                              const error = await response.json()
-                              throw new Error(error.error || "Failed to capture payment")
-                            }
-
-                            const captureData = await response.json()
-                            if (captureData.success) {
-                              fetchCampaign() // Refresh to show ACTIVE status
-                            } else {
-                              setPaymentError("Payment was not completed.")
-                            }
-                          } catch (error) {
-                            console.error("Capture error:", error)
-                            setPaymentError("Payment failed to capture.")
-                          } finally {
-                            setCapturing(false)
-                          }
-                        }}
-                      />
-                    </PayPalScriptProvider>
-                  </div>
-                </div>
-
-                {paymentError && (
-                  <p className="mt-4 text-sm text-rose-400 font-medium">{paymentError}</p>
-                )}
-                
-                {capturing && (
-                  <div className="mt-4 flex items-center gap-2 text-sm text-white/40">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Completing transaction...
-                  </div>
-                )}
               </div>
             ) : (
               /* Progress (Only for Active/Completed) */
               <div className="mb-6">
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="text-white/50">Review Progress</span>
-                  <span className="text-white font-medium">{completedReviews} / {campaign.targetReviewCount}</span>
+                  <span className="text-white/50">Partnership Status</span>
+                  <span className="text-white font-medium">{progress}% Reach Goal</span>
                 </div>
                 <div className="h-3 rounded-full bg-white/10 overflow-hidden">
                   <div 
@@ -464,10 +373,11 @@ export function CampaignDetailPage({ campaignId, user }: CampaignDetailPageProps
               <h3 className="font-medium text-white mb-4">Campaign Settings</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-white/40 mb-1">Campaign Type</p>
-                  <p className="text-white font-medium">
-                    {campaign.campaignType === "PRE_LAUNCH" ? "Pre-Launch (ARC)" : "Post-Launch (Boost)"}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <span className="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium">
+                      {campaign.campaignType === "PRE_LAUNCH" ? "Unpublished" : "Published"}
+                    </span>
+                  </div>
                 </div>
                 <div>
                   <p className="text-sm text-white/40 mb-1">Target Reviews</p>

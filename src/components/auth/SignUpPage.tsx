@@ -190,8 +190,8 @@ export function SignUpPage({ onAuthSuccess }: SignUpPageProps) {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-serif font-medium text-foreground text-lg mb-1">New Author</h3>
-                  <p className="text-sm text-foreground/60 font-sans leading-relaxed">
-                    I'm preparing to launch. I need an ARC team and guaranteed pre-launch feedback.
+                  <p className="text-sm text-foreground/70 font-sans leading-relaxed">
+                    I'm preparing to launch. I need a publishing partner and guaranteed marketing reach.
                   </p>
                 </div>
                 <div className={`mt-2 w-5 h-5 rounded-full border-2 transition-all flex items-center justify-center ${

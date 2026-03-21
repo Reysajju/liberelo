@@ -15,6 +15,7 @@ datasource db {
 model Profile {
   id                    String     @id @default(cuid())
   email                 String     @unique
+  phone                 String?
   name                  String?
   image                 String?
   userType              UserType   @default(REVIEWER)
@@ -130,6 +131,7 @@ enum CampaignType {
 
 enum CampaignStatus {
   DRAFT
+  PENDING_REVIEW
   PENDING_PAYMENT
   ACTIVE
   PAUSED

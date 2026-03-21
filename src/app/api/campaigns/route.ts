@@ -8,6 +8,7 @@ export async function POST(request: NextRequest) {
       bookId,
       authorId: providedAuthorId,
       email,
+      phone,
       campaignType,
       targetReviewCount,
       name,
@@ -27,6 +28,7 @@ export async function POST(request: NextRequest) {
         profile = await db.profile.create({
           data: {
             email,
+            phone,
             name: email.split("@")[0],
             userType: "AUTHOR",
           },
@@ -48,7 +50,7 @@ export async function POST(request: NextRequest) {
         name: name || null,
         description: description || null,
         totalAmount: totalAmount || 0,
-        status: "PENDING_PAYMENT", // Campaign stays pending until PayPal payment is captured
+        status: "PENDING_REVIEW", // Application rests in review queue
       },
       include: {
         book: true,
