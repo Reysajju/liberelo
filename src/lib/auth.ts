@@ -31,7 +31,7 @@ export const authOptions: NextAuthOptions = {
             data: {
               email: credentials.email,
               name: credentials.name,
-              userType: (credentials.userType as "AUTHOR" | "REVIEWER" | "BOTH") || "REVIEWER",
+              userType: (credentials.userType as "AUTHOR" | "BOTH") || "AUTHOR",
             },
           })
         }

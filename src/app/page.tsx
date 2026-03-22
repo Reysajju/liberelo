@@ -17,10 +17,9 @@ import { TermsPage } from "@/components/pages/TermsPage"
 import { AgreementPage } from "@/components/pages/AgreementPage"
 import { PricingPage } from "@/components/pages/PricingPage"
 import { AuthorDashboard } from "@/components/dashboard/AuthorDashboard"
-import { ReviewerDashboard } from "@/components/dashboard/ReviewerDashboard"
+
 import { CampaignWizard } from "@/components/campaign/CampaignWizard"
-import { DiscoverPage } from "@/components/reviewer/DiscoverPage"
-import { LibraryPage } from "@/components/reviewer/LibraryPage"
+
 import { CampaignDetailPage } from "@/components/campaign/CampaignDetailPage"
 import { PrivacyPolicy } from "@/components/legal/PrivacyPolicy"
 import { AnimatePresence, motion } from "framer-motion"
@@ -116,22 +115,11 @@ function HomeContent() {
         return <ForgotPasswordPage />
       case "dashboard":
         if (!user) return <SignInPage onAuthSuccess={handleAuthSuccess} />
-        return user.userType === "AUTHOR" ? (
-          <AuthorDashboard user={user} />
-        ) : user.userType === "BOTH" ? (
-          <AuthorDashboard user={user} />
-        ) : (
-          <ReviewerDashboard user={user} />
-        )
+        return <AuthorDashboard user={user} />
       case "campaign-new":
         // Allow guests to start a campaign
         return <CampaignWizard user={user} onComplete={handleCampaignComplete} />
-      case "discover":
-        if (!user) return <SignInPage onAuthSuccess={handleAuthSuccess} />
-        return <DiscoverPage user={user} />
-      case "library":
-        if (!user) return <SignInPage onAuthSuccess={handleAuthSuccess} />
-        return <LibraryPage user={user} />
+
       case "campaign-detail":
         if (!user || !selectedCampaignId) return <SignInPage onAuthSuccess={handleAuthSuccess} />
         return <CampaignDetailPage campaignId={selectedCampaignId} user={user} />

@@ -1,4 +1,5 @@
-import { FAQPage, authorFaqs } from "@/components/pages/FAQPage";
+import { FAQPage } from "@/components/pages/FAQPage";
+import { authorFaqs } from "@/config/faqs";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

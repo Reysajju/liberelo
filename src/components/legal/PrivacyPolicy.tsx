@@ -25,7 +25,7 @@ export function PrivacyPolicy() {
       content: [
         "Reader identities are protected under applicable national privacy laws including but not limited to GDPR, CCPA, and other data protection regulations.",
         "Authors receive only aggregate, anonymized data about reader engagement with their books.",
-        "Individual reader information including names, email addresses, reading preferences, and review history are never shared with authors or third parties.",
+        "Individual reader information including names, email addresses, reading preferences, and engagement history are never shared with authors or third parties.",
         "Reader consent is required for all data collection, and readers maintain full control over their personal information."
       ]
     },
@@ -45,7 +45,7 @@ export function PrivacyPolicy() {
       content: [
         "Total number of readers their book has been shared with.",
         "Aggregate claim and engagement statistics (not individual reader data).",
-        "Anonymous review URLs (links to published reviews, not reviewer identities).",
+        "Anonymous engagement metrics (data points on reader interest, not personal identities).",
         "Campaign performance metrics in aggregate form."
       ]
     },

@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
         data: {
           email,
           name: name || email.split("@")[0],
-          userType: userType || "REVIEWER",
+          userType: userType || "AUTHOR",
         },
       })
     }

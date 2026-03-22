@@ -24,7 +24,7 @@ export function HowItWorksPage() {
     {
       num: "03",
       title: "Targeted Distribution",
-      desc: "Our algorithm matches your book to verified reviewers based on their demonstrated reading history and preferences.",
+      desc: "Our algorithm matches your book to verified readers based on their demonstrated reading history and preferences.",
       icon: Users,
     },
     {

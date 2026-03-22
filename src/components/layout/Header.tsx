@@ -31,7 +31,7 @@ export function Header({ user }: HeaderProps) {
   const pathname = usePathname()
 
   const isAuthor = user?.userType === "AUTHOR" || user?.userType === "BOTH"
-  const isReviewer = user?.userType === "REVIEWER" || user?.userType === "BOTH"
+
 
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" })
@@ -120,34 +120,7 @@ export function Header({ user }: HeaderProps) {
                 </Button>
               )}
               
-              {isReviewer && (
-                <>
-                  <Button
-                    variant="ghost"
-                    onClick={() => setCurrentView("discover")}
-                    className={`text-sm font-medium rounded-full px-4 transition-all font-sans ${
-                      currentView === "discover" 
-                        ? "text-primary bg-primary/10" 
-                        : "text-foreground/60 hover:text-foreground hover:bg-secondary/5"
-                    }`}
-                  >
-                    <Compass className="mr-2 h-4 w-4" />
-                    Discover
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    onClick={() => setCurrentView("library")}
-                    className={`text-sm font-medium rounded-full px-4 transition-all font-sans ${
-                      currentView === "library" 
-                        ? "text-primary bg-primary/10" 
-                        : "text-foreground/60 hover:text-foreground hover:bg-secondary/5"
-                    }`}
-                  >
-                    <Library className="mr-2 h-4 w-4" />
-                    My Library
-                  </Button>
-                </>
-              )}
+
             </>
           )}
         </nav>
@@ -268,30 +241,7 @@ export function Header({ user }: HeaderProps) {
                   </Button>
                 )}
                 
-                {isReviewer && (
-                  <>
-                    <Button
-                      variant="ghost"
-                      onClick={() => { setCurrentView("discover"); setMobileMenuOpen(false) }}
-                      className={`justify-start text-sm font-medium rounded-xl ${
-                        currentView === "discover" ? "text-primary bg-primary/10" : "text-foreground/60"
-                      }`}
-                    >
-                      <Compass className="mr-2 h-4 w-4" />
-                      Discover
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      onClick={() => { setCurrentView("library"); setMobileMenuOpen(false) }}
-                      className={`justify-start text-sm font-medium rounded-xl ${
-                        currentView === "library" ? "text-primary bg-primary/10" : "text-foreground/60"
-                      }`}
-                    >
-                      <Library className="mr-2 h-4 w-4" />
-                      My Library
-                    </Button>
-                  </>
-                )}
+
               </>
             )}
           </div>

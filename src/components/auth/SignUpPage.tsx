@@ -17,7 +17,7 @@ export function SignUpPage({ onAuthSuccess }: SignUpPageProps) {
   const { setCurrentView, guestEmail } = useAppStore()
   const { toast } = useToast()
   const [step, setStep] = useState<"role" | "details">("role")
-  const [selectedType, setSelectedType] = useState<"NEW_AUTHOR" | "PUBLISHED_AUTHOR" | "REVIEWER">("NEW_AUTHOR")
+  const [selectedType, setSelectedType] = useState<"NEW_AUTHOR" | "PUBLISHED_AUTHOR">("NEW_AUTHOR")
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
@@ -71,7 +71,7 @@ export function SignUpPage({ onAuthSuccess }: SignUpPageProps) {
         body: JSON.stringify({
           email: formData.email,
           name: formData.name,
-          userType: selectedType === "REVIEWER" ? "REVIEWER" : "AUTHOR",
+          userType: "AUTHOR",
         }),
       })
 
@@ -204,37 +204,7 @@ export function SignUpPage({ onAuthSuccess }: SignUpPageProps) {
               </div>
             </button>
 
-            <button
-              onClick={() => setSelectedType("REVIEWER")}
-              className={`w-full text-left p-6 rounded-2xl border transition-all duration-300 group ${
-                selectedType === "REVIEWER"
-                  ? "bg-primary/5 border-primary shadow-sm"
-                  : "bg-card border-border/50 hover:border-primary/50"
-              }`}
-            >
-              <div className="flex items-start gap-4">
-                <div className={`p-3 rounded-xl transition-all ${
-                  selectedType === "REVIEWER"
-                    ? "bg-primary/10 text-primary"
-                    : "bg-secondary/5 text-secondary/50 group-hover:bg-primary/5 group-hover:text-primary/70"
-                }`}>
-                  <BookOpen className="h-6 w-6" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-serif font-medium text-foreground text-lg mb-1">Reviewer</h3>
-                  <p className="text-sm text-foreground/60 font-sans leading-relaxed">
-                    I want to discover free books and share my honest thoughts.
-                  </p>
-                </div>
-                <div className={`mt-2 w-5 h-5 rounded-full border-2 transition-all flex items-center justify-center ${
-                  selectedType === "REVIEWER"
-                    ? "border-primary bg-primary"
-                    : "border-border"
-                }`}>
-                  {selectedType === "REVIEWER" && <div className="w-2 h-2 rounded-full bg-background" />}
-                </div>
-              </div>
-            </button>
+
 
             <Button 
               onClick={() => setStep("details")}

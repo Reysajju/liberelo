@@ -157,9 +157,7 @@ export function PricingPage() {
         </div>
 
         <div className="mt-20 text-center max-w-2xl mx-auto">
-          <p className="text-foreground/50 text-sm font-sans italic">
-            * Note: We charge based on guaranteed reader reach. We do not compensate reviewers, ensuring strict adherence to Amazon's platform rules. A reach guarantees that the selected number of readers will see your book and be prompted to give feedback.
-          </p>
+            * Note: We charge based on guaranteed reader reach. We do not compensate readers, ensuring strict adherence to platform rules. A reach guarantees that the selected number of readers will see your book and be prompted to engage.
         </div>
       </div>
     </div>

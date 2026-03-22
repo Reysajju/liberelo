@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
         data: {
           email: session.user.email,
           name: session.user.user_metadata?.full_name || email.split("@")[0],
-          userType: session.user.user_metadata?.user_type || "REVIEWER",
+          userType: session.user.user_metadata?.user_type || "AUTHOR",
         },
       })
     }
