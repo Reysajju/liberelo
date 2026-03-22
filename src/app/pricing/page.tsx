@@ -2,8 +2,8 @@ import { PricingPage } from "@/components/pages/PricingPage";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Pricing | Liberelo",
-  description: "Transparent pricing for authors. Choose the tier that fits your launch strategy.",
+  title: "Royalty Packages & Pricing | Liberelo",
+  description: "Liberelo charges zero upfront publishing fees. Explore our transparent commission-based royalty packages, from Standard to Elite.",
 };
 
 export default function Page() {

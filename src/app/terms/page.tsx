@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Terms of Service | Liberelo",
-  description: "Terms and conditions for using the Liberelo platform.",
+  description: "Official terms and conditions for author partnerships, manuscript submission, and commission-based royalty distribution at Liberelo.",
 };
 
 export default function Page() {

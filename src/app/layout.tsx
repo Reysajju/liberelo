@@ -88,6 +88,38 @@ export default function RootLayout({
           defaultTheme="system" 
           enableSystem
         >
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "Liberelo",
+                "url": "https://liberelo.com",
+                "logo": "https://liberelo.com/logo.png",
+                "description": "Premium, commission-based book publishing and marketing partnership for authors.",
+                "sameAs": [
+                  "https://twitter.com/liberelo_app"
+                ]
+              })
+            }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "url": "https://liberelo.com",
+                "name": "Liberelo",
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": "https://liberelo.com/search?q={search_term_string}",
+                  "query-input": "required name=search_term_string"
+                }
+              })
+            }}
+          />
           {children}
           <Toaster />
           <ThemeToggle />

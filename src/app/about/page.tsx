@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Our Story | Liberelo",
-  description: "Learn about Liberelo's mission to liberate authors from algorithms and connect them with real readers.",
+  description: "Liberelo is a premium book marketing and publishing partnership. We liberate authors from vanity presses through a pure commission model.",
 };
 
 export default function Page() {

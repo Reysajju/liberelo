@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Liberelo",
-  description: "How we handle and protect your data at Liberelo.",
+  description: "Review our strict commitment to data security, privacy, and intellectual property protection for all authors utilizing our publishing and distribution engine.",
 };
 
 export default function Page() {
